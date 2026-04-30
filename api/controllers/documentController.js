@@ -1,4 +1,4 @@
-import { pool } from "../db.js";
+import { pool } from "../config/db.js";
 import { extractTextFromFile } from "../services/textExtractor.js";
 import { parseDocumentText } from "../services/parser.js";
 import { validateDocument, getStatusFromIssues } from "../services/validator.js";

@@ -36,15 +36,17 @@ export const parseDocumentText = (text) => {
     normalizedText.match(/\b(EUR|USD|BAM|AED|GBP)\b/i);
 
   const subtotalMatch =
-    normalizedText.match(/Subtotal\s+([\d.,]+)/i) ||
-    normalizedText.match(/Sub Total[:\s]+([\d.,]+)/i);
+    normalizedText.match(/Subtotal\s*[:\-]?\s*([\d.,]+)/i) ||
+    normalizedText.match(/Sub Total\s*[:\-]?\s*([\d.,]+)/i);
 
-  const taxMatch =
-    normalizedText.match(/Tax\s*\(\d+%\)\s+([\d.,]+)/i) ||
-    normalizedText.match(/Tax[:\s]+([\d.,]+)/i) ||
-    normalizedText.match(/VAT[:\s]+([\d.,]+)/i);
+    const taxMatch =
+    normalizedText.match(/Tax\s*\(\d+%\)\s*[:\-]?\s*([\d.,]+)/i) ||
+    normalizedText.match(/Tax\s*[:\-]?\s*([\d.,]+)/i) ||
+    normalizedText.match(/VAT\s*[:\-]?\s*([\d.,]+)/i);
 
-  const totalMatches = [...normalizedText.matchAll(/Total[:\s]+(?:[A-Z]{3}\s*)?([\d.,]+)/gi)];
+    const totalMatches = [
+    ...normalizedText.matchAll(/Total\s*[:\-]?\s*(?:[A-Z]{3}\s*)?([\d.,]+)/gi),
+   ];
   const lastTotalMatch = totalMatches.length > 0
     ? totalMatches[totalMatches.length - 1]
     : null;

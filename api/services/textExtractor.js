@@ -1,8 +1,11 @@
 import fs from "fs";
 import path from "path";
-import pdfParse from "pdf-parse";
+import { createRequire } from "module";
 import csvParser from "csv-parser";
 import Tesseract from "tesseract.js";
+
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
 
 export const extractTextFromFile = async (file) => {
   const filePath = file.path;

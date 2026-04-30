@@ -5,7 +5,7 @@ export const validateDocument = async (doc, pool) => {
   if (!doc.supplier) issues.push("Missing supplier");
   if (!doc.documentNumber) issues.push("Missing document number");
   if (!doc.issueDate) issues.push("Missing issue date");
-  if (!doc.currency) issues.push("Missing currency");
+  //if (!doc.currency) issues.push("Missing currency");
 
   if (doc.issueDate && isNaN(Date.parse(doc.issueDate))) {
     issues.push("Invalid issue date");
