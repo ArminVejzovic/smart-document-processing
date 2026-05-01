@@ -1,0 +1,24 @@
+services:
+  api:
+    build: ./api
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./api/.env
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    command: npm run dev
+
+  app:
+    build: ./app
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./app/.env
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    command: npm run dev -- --host 0.0.0.0
+    depends_on:
+      - api
