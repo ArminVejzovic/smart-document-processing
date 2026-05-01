@@ -99,3 +99,89 @@ export const getDocuments = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const getDocumentById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const documentResult = await pool.query(
+      `SELECT * FROM documents WHERE id = $1`,
+      [id]
+    );
+
+    if (documentResult.rows.length === 0) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+
+    const lineItemsResult = await pool.query(
+      `SELECT * FROM line_items WHERE document_id = $1`,
+      [id]
+    );
+
+    res.json({
+      document: documentResult.rows[0],
+      lineItems: lineItemsResult.rows,
+    });
+  } catch (error) {
+    console.error("Get document by id error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const updateDocument = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      document_type,
+      supplier,
+      document_number,
+      issue_date,
+      due_date,
+      currency,
+      subtotal,
+      tax,
+      total,
+      status,
+      issues,
+    } = req.body;
+
+    const result = await pool.query(
+      `UPDATE documents
+       SET document_type = $1,
+           supplier = $2,
+           document_number = $3,
+           issue_date = $4,
+           due_date = $5,
+           currency = $6,
+           subtotal = $7,
+           tax = $8,
+           total = $9,
+           status = $10,
+           issues = $11
+       WHERE id = $12
+       RETURNING *`,
+      [
+        document_type,
+        supplier,
+        document_number,
+        issue_date,
+        due_date,
+        currency,
+        subtotal,
+        tax,
+        total,
+        status,
+        JSON.stringify(issues || []),
+        id,
+      ]
+    );
+
+    res.json({
+      message: "Document updated successfully",
+      document: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Update document error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

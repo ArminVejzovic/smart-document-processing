@@ -19,3 +19,13 @@ export const getDocuments = async () => {
   const response = await axios.get(API_URL);
   return response.data;
 };
+
+export const getDocumentById = async (id) => {
+  const response = await axios.get(`${API_URL}/${id}`);
+  return response.data;
+};
+
+export const updateDocument = async (id, data) => {
+  const response = await axios.put(`${API_URL}/${id}`, data);
+  return response.data;
+};

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getDocuments } from "../api/documentApi";
 import UploadDocument from "../pages/UploadDocument";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   const [documents, setDocuments] = useState([]);
@@ -59,6 +60,7 @@ function Dashboard() {
                     <th className="px-4 py-3 font-semibold">Currency</th>
                     <th className="px-4 py-3 font-semibold">Status</th>
                     <th className="px-4 py-3 font-semibold">Issues</th>
+                    <th className="px-4 py-3 font-semibold">Action</th>
                   </tr>
                 </thead>
 
@@ -104,8 +106,12 @@ function Dashboard() {
                           ? doc.issues.join(", ")
                           : "None"}
                       </td>
+                      <td>
+                        <Link to={`/documents/${doc.id}`}>Review</Link>
+                      </td>
                     </tr>
                   ))}
+
                 </tbody>
               </table>
             </div>
