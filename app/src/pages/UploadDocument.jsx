@@ -33,44 +33,89 @@ function UploadDocument({ onUploaded }) {
     }
   };
 
-  return (
-    <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">
-        Upload document
-      </h2>
+  const status = result?.document?.status;
 
-      <form onSubmit={handleUpload} className="flex flex-col gap-4">
-        <input
-          type="file"
-          accept=".pdf,.txt,.csv,.png,.jpg,.jpeg"
-          onChange={(e) => setFile(e.target.files[0])}
-          className="block w-full text-sm text-gray-700 border border-gray-300 rounded-xl cursor-pointer bg-gray-50 file:mr-4 file:py-3 file:px-4 file:rounded-l-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-        />
+  return (
+    <div className="overflow-hidden rounded-3xl border border-white/10 bg-white p-6 shadow-xl">
+      <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="mb-2 inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold text-cyan-700">
+            New document
+          </p>
+
+          <h2 className="text-2xl font-bold text-slate-900">
+            Upload document
+          </h2>
+
+          <p className="mt-1 text-sm text-slate-500">
+            Upload PDF, TXT, CSV or image files and let the system extract and
+            validate document data.
+          </p>
+        </div>
+      </div>
+
+      <form onSubmit={handleUpload} className="grid gap-4 lg:grid-cols-[1fr_auto]">
+        <label className="flex cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center transition hover:border-cyan-400 hover:bg-cyan-50">
+          <input
+            type="file"
+            accept=".pdf,.txt,.csv,.png,.jpg,.jpeg"
+            onChange={(e) => setFile(e.target.files[0])}
+            className="hidden"
+          />
+
+          <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm">
+            📄
+          </div>
+
+          <p className="text-sm font-semibold text-slate-800">
+            {file ? file.name : "Click to select a document"}
+          </p>
+
+          <p className="mt-1 text-xs text-slate-500">
+            Supported: PDF, TXT, CSV, PNG, JPG, JPEG
+          </p>
+        </label>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full sm:w-fit px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+          className="rounded-2xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white shadow-lg transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:bg-slate-400 lg:min-w-48"
         >
           {loading ? "Processing..." : "Upload and process"}
         </button>
       </form>
 
       {result && (
-        <div className="mt-5 rounded-xl border border-gray-200 bg-gray-50 p-4">
-          <p className="text-gray-800">
-            <strong>Status:</strong>{" "}
-            <span className="font-semibold">{result.document.status}</span>
-          </p>
+        <div className="mt-5 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm text-slate-500">Processing result</p>
+              <p className="mt-1 text-lg font-bold text-slate-900">
+                Status: {status || "Unknown"}
+              </p>
+            </div>
+
+            <span
+              className={`w-fit rounded-full border px-3 py-1 text-xs font-semibold ${
+                status === "Validated" || status === "valid"
+                  ? "border-emerald-200 bg-emerald-100 text-emerald-700"
+                  : status === "Needs Review" || status === "needs_review"
+                  ? "border-amber-200 bg-amber-100 text-amber-700"
+                  : "border-red-200 bg-red-100 text-red-700"
+              }`}
+            >
+              {status || "Unknown"}
+            </span>
+          </div>
 
           {result.issues?.length > 0 ? (
-            <ul className="mt-3 list-disc list-inside text-sm text-red-600 space-y-1">
+            <ul className="mt-4 space-y-2 rounded-2xl border border-red-100 bg-white p-4 text-sm text-red-600">
               {result.issues.map((issue, index) => (
-                <li key={index}>{issue}</li>
+                <li key={index}>• {issue}</li>
               ))}
             </ul>
           ) : (
-            <p className="mt-2 text-sm text-green-600">
+            <p className="mt-4 rounded-2xl border border-emerald-100 bg-white p-4 text-sm font-medium text-emerald-600">
               No validation issues detected.
             </p>
           )}
