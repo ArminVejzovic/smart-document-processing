@@ -5,6 +5,7 @@ import {
   getDocuments,
   getDocumentById,
   updateDocument,
+  getTotalsByCurrency
 } from "../controllers/documentController.js";
 
 const router = express.Router();
@@ -20,5 +21,6 @@ router.post("/upload", upload.single("document"), uploadDocument);
 router.get("/", getDocuments);
 router.get("/:id", getDocumentById);
 router.put("/:id", updateDocument);
+router.get("/totals/currency", getTotalsByCurrency);
 
 export default router;

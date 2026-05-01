@@ -2,19 +2,26 @@ import { useEffect, useState } from "react";
 import { getDocuments } from "../api/documentApi";
 import UploadDocument from "../pages/UploadDocument";
 import { Link } from "react-router-dom";
+import { getTotalsByCurrency } from "../api/documentApi";
 
 function Dashboard() {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [totals, setTotals] = useState([]);
 
   const loadDocuments = async () => {
     try {
       setLoading(true);
-      const data = await getDocuments();
-      setDocuments(data);
+
+      const docsData = await getDocuments();
+      setDocuments(docsData);
+
+      const totalsData = await getTotalsByCurrency();
+      setTotals(totalsData);
+
     } catch (error) {
       console.error(error);
-      alert("Failed to load documents.");
+      alert("Failed to load data.");
     } finally {
       setLoading(false);
     }
@@ -42,6 +49,24 @@ function Dashboard() {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
             Documents
           </h2>
+
+          <div className="card">
+            <h2>Totals by Currency</h2>
+
+            {totals.length === 0 ? (
+              <p>No totals available.</p>
+            ) : (
+              <ul>
+                {totals
+                  .filter((t) => t.currency)
+                  .map((t) => (
+                    <li key={t.currency}>
+                      <strong>{t.currency}:</strong> {Number(t.total_sum).toFixed(2)}
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </div>
 
           {loading ? (
             <p className="text-gray-600">Loading documents...</p>

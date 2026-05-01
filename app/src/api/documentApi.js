@@ -29,3 +29,8 @@ export const updateDocument = async (id, data) => {
   const response = await axios.put(`${API_URL}/${id}`, data);
   return response.data;
 };
+
+export const getTotalsByCurrency = async () => {
+  const response = await axios.get(`${API_URL}/totals/currency`);
+  return response.data;
+};

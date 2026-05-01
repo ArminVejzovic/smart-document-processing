@@ -185,3 +185,22 @@ export const updateDocument = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const getTotalsByCurrency = async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT currency, SUM(total) as total_sum
+      FROM documents
+      WHERE total IS NOT NULL
+        AND currency IS NOT NULL
+        AND currency != ''
+      GROUP BY currency
+      ORDER BY currency
+    `);
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Totals error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
