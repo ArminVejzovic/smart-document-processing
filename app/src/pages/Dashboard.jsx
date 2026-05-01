@@ -100,19 +100,29 @@ function Dashboard() {
         {/* Header */}
         <div className="mb-8 overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-6 shadow-2xl backdrop-blur-xl sm:p-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <div className="mb-3 inline-flex rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-1 text-sm font-medium text-cyan-200">
-                Smart Document Processing Platform
+            <div className="flex items-start gap-5">
+              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl border border-white/20 bg-white/10 p-2 shadow-2xl backdrop-blur-xl">
+                <img
+                  src="/docupilot.png"
+                  alt="DocuPilot logo"
+                  className="h-full w-full rounded-2xl object-cover"
+                />
               </div>
 
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-                DocuPilot
-              </h1>
+              <div>
+                <div className="mb-3 inline-flex rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-1 text-sm font-medium text-cyan-200">
+                  Smart Document Processing Platform
+                </div>
 
-              <p className="mt-3 max-w-2xl text-base text-slate-300">
-                Upload, process, validate and review invoices and purchase
-                orders in one clean dashboard.
-              </p>
+                <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                  DocuPilot
+                </h1>
+
+                <p className="mt-3 max-w-2xl text-base text-slate-300">
+                  Upload, process, validate and review invoices and purchase orders in one
+                  clean dashboard.
+                </p>
+              </div>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-white shadow-lg">
