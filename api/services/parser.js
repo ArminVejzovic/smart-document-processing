@@ -17,8 +17,10 @@ export const parseDocumentText = (text) => {
     : "invoice";
 
   const supplierMatch =
-    normalizedText.match(/Supplier:\s*(.+)/i) ||
-    normalizedText.match(/Supplier\s+(.+)/i);
+    normalizedText.match(/Supplier:\s*(.+?)(?=\s+(Number|Invoice|Purchase|Date|Description|Subtotal|Tax|Total)\b|$)/i) ||
+    normalizedText.match(/Buyer:\s*(.+?)(?=\s+(Number|Invoice|Purchase|Date|Description|Subtotal|Tax|Total)\b|$)/i) ||
+    normalizedText.match(/Supplier\s+(.+?)(?=\s+(Number|Invoice|Purchase|Date|Description|Subtotal|Tax|Total)\b|$)/i) ||
+    normalizedText.match(/Buyer\s+(.+?)(?=\s+(Number|Invoice|Purchase|Date|Description|Subtotal|Tax|Total)\b|$)/i);
 
   const numberMatch =
     normalizedText.match(/Number:\s*([A-Z0-9-]+)/i) ||
