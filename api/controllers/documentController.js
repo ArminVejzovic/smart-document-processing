@@ -131,6 +131,7 @@ export const getDocumentById = async (req, res) => {
 export const updateDocument = async (req, res) => {
   try {
     const { id } = req.params;
+
     const {
       document_type,
       supplier,
@@ -142,8 +143,42 @@ export const updateDocument = async (req, res) => {
       tax,
       total,
       status,
-      issues,
     } = req.body;
+
+    const lineItemsResult = await pool.query(
+      `SELECT * FROM line_items WHERE document_id = $1`,
+      [id]
+    );
+
+    const lineItems = lineItemsResult.rows.map((item) => ({
+      description: item.description,
+      quantity: item.quantity,
+      unitPrice: item.unit_price,
+      total: item.total,
+    }));
+
+    const docForValidation = {
+      documentType: document_type,
+      supplier,
+      documentNumber: document_number,
+      issueDate: issue_date,
+      dueDate: due_date,
+      currency,
+      subtotal: subtotal !== "" && subtotal !== null ? Number(subtotal) : null,
+      tax: tax !== "" && tax !== null ? Number(tax) : null,
+      total: total !== "" && total !== null ? Number(total) : null,
+      lineItems,
+    };
+
+    const issues = await validateDocument(docForValidation, pool, id);
+
+    let finalStatus;
+
+    if (status === "Rejected") {
+      finalStatus = "Rejected";
+    } else {
+      finalStatus = getStatusFromIssues(issues);
+    }
 
     const result = await pool.query(
       `UPDATE documents
@@ -170,15 +205,16 @@ export const updateDocument = async (req, res) => {
         subtotal,
         tax,
         total,
-        status,
-        JSON.stringify(issues || []),
+        finalStatus,
+        JSON.stringify(issues),
         id,
       ]
     );
 
     res.json({
-      message: "Document updated successfully",
+      message: "Document updated and revalidated successfully",
       document: result.rows[0],
+      issues,
     });
   } catch (error) {
     console.error("Update document error:", error);

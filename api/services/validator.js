@@ -1,4 +1,4 @@
-export const validateDocument = async (doc, pool) => {
+export const validateDocument = async (doc, pool, currentDocumentId = null) => {
   const issues = [];
 
   if (!doc.documentType) issues.push("Missing document type");
@@ -25,9 +25,9 @@ export const validateDocument = async (doc, pool) => {
   }
 
   if (doc.subtotal !== null && doc.tax !== null && doc.total !== null) {
-    const expectedTotal = Number((doc.subtotal + doc.tax).toFixed(2));
+    const expectedTotal = Number((Number(doc.subtotal) + Number(doc.tax)).toFixed(2));
 
-    if (Math.abs(expectedTotal - doc.total) > 0.01) {
+    if (Math.abs(expectedTotal - Number(doc.total)) > 0.01) {
       issues.push(`Total mismatch: expected ${expectedTotal}, got ${doc.total}`);
     }
   }
@@ -38,9 +38,11 @@ export const validateDocument = async (doc, pool) => {
       item.unitPrice !== null &&
       item.total !== null
     ) {
-      const expectedItemTotal = Number((item.quantity * item.unitPrice).toFixed(2));
+      const expectedItemTotal = Number(
+        (Number(item.quantity) * Number(item.unitPrice)).toFixed(2)
+      );
 
-      if (Math.abs(expectedItemTotal - item.total) > 0.01) {
+      if (Math.abs(expectedItemTotal - Number(item.total)) > 0.01) {
         issues.push(
           `Line item mismatch for "${item.description}": expected ${expectedItemTotal}, got ${item.total}`
         );
@@ -49,10 +51,23 @@ export const validateDocument = async (doc, pool) => {
   }
 
   if (doc.documentNumber) {
-    const duplicateResult = await pool.query(
-      `SELECT id FROM documents WHERE document_number = $1 LIMIT 1`,
-      [doc.documentNumber]
-    );
+    let duplicateResult;
+
+    if (currentDocumentId) {
+      duplicateResult = await pool.query(
+        `SELECT id FROM documents 
+         WHERE document_number = $1 AND id != $2 
+         LIMIT 1`,
+        [doc.documentNumber, currentDocumentId]
+      );
+    } else {
+      duplicateResult = await pool.query(
+        `SELECT id FROM documents 
+         WHERE document_number = $1 
+         LIMIT 1`,
+        [doc.documentNumber]
+      );
+    }
 
     if (duplicateResult.rows.length > 0) {
       issues.push("Duplicate document number");

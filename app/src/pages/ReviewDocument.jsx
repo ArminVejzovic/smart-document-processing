@@ -42,7 +42,6 @@ function ReviewDocument() {
       const payload = {
         ...document,
         status,
-        issues: status === "Validated" ? [] : document.issues || [],
       };
 
       await updateDocument(id, payload);
