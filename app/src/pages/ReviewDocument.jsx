@@ -163,17 +163,24 @@ function ReviewDocument() {
                 >
                   {label}
                   <input
-                    name={name}
-                    type={
-                      ["subtotal", "tax", "total"].includes(name)
-                        ? "number"
-                        : "text"
-                    }
-                    step="0.01"
-                    value={document[name] || ""}
-                    onChange={handleChange}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-4 focus:ring-cyan-100"
-                  />
+                  name={name}
+                  type={
+                    ["subtotal", "tax", "total"].includes(name)
+                      ? "number"
+                      : ["issue_date", "due_date"].includes(name)
+                      ? "date"
+                      : "text"
+                  }
+                  step="0.01"
+                  placeholder={
+                    ["issue_date", "due_date"].includes(name)
+                      ? "YYYY-MM-DD"
+                      : ""
+                  }
+                  value={document[name] || ""}
+                  onChange={handleChange}
+                  className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-4 focus:ring-cyan-100"
+                />
                 </label>
               ))}
             </div>
