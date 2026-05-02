@@ -219,6 +219,7 @@ Rejected
 * Totals grouped by currency
 * Review page
 * Update documents
+* Delete documents
 
 ---
 
@@ -258,6 +259,12 @@ PUT /documents/:id
 
 ```
 GET /documents/totals/currency
+```
+
+### Delete document
+
+```
+DELETE /documents/:id
 ```
 
 ---

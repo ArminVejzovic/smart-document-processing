@@ -206,6 +206,24 @@ Returns aggregated totals grouped by currency.
 ]
 ```
 
+### Delete document
+
+```
+DELETE /documents/:id
+```
+
+Deletes a document from the database.
+
+This operation also removes all related line items automatically using database cascade delete.
+
+**Example response:**
+
+```json
+{
+  "message": "Document deleted successfully"
+}
+```
+
 ---
 
 ## Validation Rules

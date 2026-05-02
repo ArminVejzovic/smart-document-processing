@@ -5,7 +5,8 @@ import {
   getDocuments,
   getDocumentById,
   updateDocument,
-  getTotalsByCurrency
+  getTotalsByCurrency,
+  deleteDocument
 } from "../controllers/documentController.js";
 
 const router = express.Router();
@@ -24,5 +25,6 @@ router.get("/", getDocuments);
 router.get("/:id", getDocumentById);
 router.put("/:id", updateDocument);
 router.get("/totals/currency", getTotalsByCurrency);
+router.delete("/:id", deleteDocument);
 
 export default router;

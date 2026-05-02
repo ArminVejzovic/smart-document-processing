@@ -34,3 +34,8 @@ export const getTotalsByCurrency = async () => {
   const response = await axios.get(`${API_URL}/totals/currency`);
   return response.data;
 };
+
+export const deleteDocument = async (id) => {
+  const response = await axios.delete(`${API_URL}/${id}`);
+  return response.data;
+};

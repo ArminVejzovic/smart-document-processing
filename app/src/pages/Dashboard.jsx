@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { getDocuments, getTotalsByCurrency } from "../api/documentApi";
+import { getDocuments, getTotalsByCurrency, deleteDocument } from "../api/documentApi";
 import UploadDocument from "../pages/UploadDocument";
 
 function Dashboard() {
@@ -92,6 +92,22 @@ function Dashboard() {
     if (value === null || value === undefined || value === "") return "-";
 
     return `${Number(value).toFixed(2)} ${currency || ""}`.trim();
+  };
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this document?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteDocument(id);
+      loadDocuments();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete document.");
+    }
   };
 
   return (
@@ -339,16 +355,26 @@ function Dashboard() {
                   </div>
 
                   <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
+
                     <p className="text-xs text-slate-400">
                       ID: {String(doc.id).slice(0, 8)}
                     </p>
 
-                    <Link
-                      to={`/documents/${doc.id}`}
-                      className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-700"
-                    >
-                      Review
-                    </Link>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleDelete(doc.id)}
+                        className="rounded-xl bg-red-500 px-3 py-2 text-sm font-semibold text-white hover:bg-red-600"
+                      >
+                        🗑
+                      </button>
+
+                      <Link
+                        to={`/documents/${doc.id}`}
+                        className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-700"
+                      >
+                        Review
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))}
